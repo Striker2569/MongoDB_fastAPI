@@ -4,11 +4,14 @@ from typing import List, Dict
 from pydantic import BaseModel
 import traceback
 from fastapi.responses import JSONResponse
-
+from dotenv import load_dotenv
+import os
 app = FastAPI()
+load_dotenv()
 
+mongo_db_url = os.getenv("URL")
 def get_collection():
-    client = AsyncIOMotorClient("mongodb+srv://152003harsh:7Zgy4F3JkTPqAcje@cluster0.sje4wcv.mongodb.net/?retryWrites=true&w=majority")  # Update this with your MongoDB Atlas connection string
+    client = AsyncIOMotorClient(mongo_db_url)  # Update this with your MongoDB Atlas connection string
     db = client["metadata"]  # Replace db_name with your database name
     collection = db["metadata_collections"]  # Replace collection_name with your collection name
     return collection
@@ -16,7 +19,7 @@ def get_collection():
 @app.on_event("startup")
 async def startup_db_client():
     global client, db, collection
-    client = AsyncIOMotorClient("mongodb+srv://152003harsh:7Zgy4F3JkTPqAcje@cluster0.sje4wcv.mongodb.net/?retryWrites=true&w=majority")  # Update this with your MongoDB Atlas connection string
+    client = AsyncIOMotorClient(mongo_db_url)  # Update this with your MongoDB Atlas connection string
     db = client["metadata"]  # Replace db_name with your database name
     collection = db["metadata_collections"]
     # collection = get_collection()
