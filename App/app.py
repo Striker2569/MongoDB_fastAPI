@@ -11,16 +11,16 @@ load_dotenv()
 
 mongo_db_url = os.getenv("URL")
 def get_collection():
-    client = AsyncIOMotorClient(mongo_db_url)  # Update this with your MongoDB Atlas connection string
-    db = client["metadata"]  # Replace db_name with your database name
-    collection = db["metadata_collections"]  # Replace collection_name with your collection name
+    client = AsyncIOMotorClient(mongo_db_url)  
+    db = client["metadata"]  
+    collection = db["metadata_collections"]  
     return collection
 
 @app.on_event("startup")
 async def startup_db_client():
     global client, db, collection
-    client = AsyncIOMotorClient(mongo_db_url)  # Update this with your MongoDB Atlas connection string
-    db = client["metadata"]  # Replace db_name with your database name
+    client = AsyncIOMotorClient(mongo_db_url)  
+    db = client["metadata"] 
     collection = db["metadata_collections"]
     # collection = get_collection()
     # await collection.create_index([("Title", "text"), ("SubCategory", "text")])
