@@ -52,17 +52,17 @@ async def search_titles(q: str, collection=Depends(get_collection)):
     result = []
     async for document in cursor:
         relevance = 0
-        if not document.get("ParentExists"):
+        if (document.get("ParentExists") == "N"):
             relevance += 2
-        elif document.get("Child"):
+        elif ((document.get("Child") == "Y") and (document.get("ParentExists") =="Y")):
             relevance += 1
-        elif document.get("ParentExists") and not document.get("Child"):
+        elif ((document.get("ParentExists") == "Y") and (document.get("Child") == "N")):
             relevance += 0.5
 
         if 'CPI' in document.get("Title"):
             relevance += 5
-
-        simplified_document = {"Title": document["Title"], "Category": document["Category"], "SubCategory": document["SubCategory"], "relevance": relevance}
+        # print(document.get("Child"))
+        simplified_document = {"Title": document["Title"], "Category": document["Category"], "SubCategory": document["SubCategory"], "relevance": relevance,"ParentExists":document["ParentExists"],"Child":document["Child"],"Discontinued":document["Discontinued"]}
         result.append(simplified_document)
 
     result = sorted(result, key=lambda x: x["relevance"], reverse=True)
